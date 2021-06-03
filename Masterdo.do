@@ -295,8 +295,9 @@ restore
 *For the following church I checked their website, they have 2 services not 20, it must have been a typo
 	replace numservices=2 if loginid==4387233961
 
+/*
 *Churches to flag and maybe drop (that aren't real churches)
-	replace flag=flag+"not a Christian church (it's a "new age spiritual center" or something); " if loginid==4031001069
+	replace flag=flag+"not a Christian church (it's a 'new age spiritual center' or something); " if loginid==4031001069
 	replace flag=flag+"Dr. Hill's sample; " if loginid==1047698506
 	replace flag=flag+"
 	replace flag=flag+"
@@ -304,6 +305,7 @@ restore
 	replace flag=flag+"
 	replace flag=flag+"
 *NOTE: I AM NOT FINISHED WITH THIS PART YET
+*/
 
 
 //_________________________________________SECTION#:6 _________________________________________________//
