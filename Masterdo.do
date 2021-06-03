@@ -7,58 +7,77 @@ cd "`root'NCCAP\Data\MasterDo"
 import delimited "`root'NCCAP\Data\20210602\20210602Data.csv", clear
 
 
-*CLEANING AND FLAGGING DATA
-*Flagged IDs
-gen flag="New Church" if loginid==1898682227
-replace flag="Large Online to some In Person" if loginid==5381936596
-replace flag="Error in Jan 2020 Attendance?" if loginid==9275200923
-replace flag="Jan2020 suspect" if loginid==5368830490
-replace flag="Online only" if loginid==2030355526
-replace flag="Almost all online, odd pattern" if loginid==2235356149
-*Error in attendance data?
-drop if loginid==9275200923 
-drop if loginid==5368830490
-drop if loginid==2235356149
-*This one seems like an error, only had attendance in Jan 2021 but not in Jan 2020 or April 2021?
-drop if loginid==1898682227 
-*seems like a fake entry
-drop if loginid==1851175199 
+//_________________________________________SECTION#1: vARIABLE & LABEL FORMATTING _________________________________________________//
+
+*Variable "startdate" formatting
+	gen startdate2=date(startdate,"MDY##")
+	order startdate startdate2
+	format startdate2 %td
+	drop startdate
+	rename startdate2 startdate
+
+*Variable "enddate" formatting
+	gen enddate2=date(enddate,"MDY##")
+	order enddate enddate2
+	format enddate2 %td
+	drop enddate
+	rename enddate2 enddate
+
+*Variable "recorddate" formatting
+	gen recordeddate2=date(recordeddate,"MDY##")
+	order recordeddate recordeddate2
+	format recordeddate2 %td
+	drop recordeddate
+	rename recordeddate2 recordeddate
+
+*Incorrect zipcode format fix
+	replace zipcode="75214" if loginid==3773781983
+
+*Turning string zipcode into numeric zip for merging data
+	destring zipcode, generate(zip)
+	drop zipcode
+
+*Variable "responder" identification
+	label define responder1 1 "seniorpastor" 2 "onbehalf" 3 "staff" 4 "other"
+	label values responder responder1
+	
+*Variable "denomination" numerical identification
+	label define denomination1 611 "Adventist" 608 "Anglican" 601 "Baptist" 600 "Catholic" 610 "Congregational Church" 609 "Holiness" 605 "Lutheran" 603 "Methodist/Wesleyan" 602 "Nondenominational" 604 "Pentecostal" 606 "Presbyterian/Reformed" 607 "Restorationist" 612 "Other"
+	label values denomination denomination1
+
+*Variable "onlineservices" numerical identification
+	label define onlineservices1 1 "Yes" 0 "No" -99 "No response"
+	label values onlineservices onlineservices1
+
+*Variable "trackonline" numerical identification
+	label define trackonline1 1 "Yes" 0 "No" -99 "No response"
+	label values trackonline trackonline1
+
+*Variable "trackonlinehow" numerical identification
+	label define trackonlinehow1 1 "Screens" 2 "Viewers" 3 "Both" 4 "Other"
+	label values trackonlinehow trackonlinehow1
 
 
-gen startdate2=date(startdate,"MDY##")
-order startdate startdate2
-format startdate2 %td
-drop startdate
-rename startdate2 startdate
-
-gen enddate2=date(enddate,"MDY##")
-order enddate enddate2
-format enddate2 %td
-drop enddate
-rename enddate2 enddate
-
-gen recordeddate2=date(recordeddate,"MDY##")
-order recordeddate recordeddate2
-format recordeddate2 %td
-drop recordeddate
-rename recordeddate2 recordeddate
+//_________________________________________SECTION#2: CLEANING AND FLAGGING DATA _________________________________________________//
 
 drop if missing(security)
 drop if email==""
 
-label define responder1 1 "seniorpastor" 2 "onbehalf" 3 "staff" 4 "other"
-label values responder responder1
-
-*Incorrect zipcode format fix
-replace zipcode="75214" if loginid==3773781983
-
-*Turning string zipcode into numeric zip for merging data
-destring zipcode, generate(zip)
-drop zipcode
-
-merge m:1 zipcode using "C:\Users\enochhill\Box\NCCAP\Data\geo-dataNoDuplicateZip.dta"
-drop if _merge==2
-
+*Flagged IDs
+	gen flag="New Church" if loginid==1898682227
+	replace flag="Large Online to some In Person" if loginid==5381936596
+	replace flag="Error in Jan 2020 Attendance?" if loginid==9275200923
+	replace flag="Jan2020 suspect" if loginid==5368830490
+	replace flag="Online only" if loginid==2030355526
+	replace flag="Almost all online, odd pattern" if loginid==2235356149
+*Error in attendance data?
+	drop if loginid==9275200923 
+	drop if loginid==5368830490
+	drop if loginid==2235356149
+*This one seems like an error, only had attendance in Jan 2021 but not in Jan 2020 or April 2021?
+	drop if loginid==1898682227 
+*seems like a fake entry
+	drop if loginid==1851175199 
 *Editing international zipcodes 
 	replace country=3 if zip==100 
 	replace contryother="Kenya" if zip==100
@@ -102,17 +121,9 @@ drop if _merge==2
 *Counsultant Entry, not church
 	drop if loginid==6502446840 
 
-label define denomination1 611 "Adventist" 608 "Anglican" 601 "Baptist" 600 "Catholic" 610 "Congregational Church" 609 "Holiness" 605 "Lutheran" 603 "Methodist/Wesleyan" 602 "Nondenominational" 604 "Pentecostal" 606 "Presbyterian/Reformed" 607 "Restorationist" 612 "Other"
-label values denomination denomination1
 
-label define onlineservices1 1 "Yes" 0 "No" -99 "No response"
-label values onlineservices onlineservices1
-
-label define trackonline1 1 "Yes" 0 "No" -99 "No response"
-label values trackonline trackonline1
-
-label define trackonlinehow1 1 "Screens" 2 "Viewers" 3 "Both" 4 "Other"
-label values trackonlinehow trackonlinehow1
+merge m:1 zipcode using "C:\Users\enochhill\Box\NCCAP\Data\geo-dataNoDuplicateZip.dta"
+drop if _merge==2
 
 *Handle unusual multipliers
 replace trackviewershowmultiplier="1.7" if trackviewershowmultiplier=="1.7 per viewer"
