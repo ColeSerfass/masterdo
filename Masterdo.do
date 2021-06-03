@@ -130,6 +130,7 @@ replace onlinemostrecent=screensmostrecent if trackonlinehow==1 | trackonlinehow
 replace onlinemostrecent=viewersmostrecent/trackviewershowmultiplier if trackonlinehow==2
 replace onlinemostrecent=onlinemostrecent/trackviewershowmultiplier if trackonlinehow==4
 
+*RYAN'S CLEANING:
 *Fixing some negative numbers (people said they estimated the number of viewers with a multiplier but didn't record any online attendence data, resulting in the -99s being divided by 2 and then impacting attendance data)
 tab onlinejan2020
 replace onlinejan2020= -99 if onlinejan2020<0 & onlinejan2020>-99
@@ -143,7 +144,6 @@ tab onlinemostrecent
 replace onlinemostrecent= -99 if onlinemostrecent<0 & onlinemostrecent>-99
 tab onlinemostrecent
 
-*RYAN'S CLEANING:
 *Checking for any typos in reported attendance data (easier this way than doing eye test for every data point)
 *The point of this exercise is to generate a value or ratio for how much the attendance varies for each church over the three time snapshots. The higher the ratio, the more the variance. I flagged all of the ones above 0.89, although some of them may be just fine.
 preserve
