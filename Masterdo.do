@@ -49,7 +49,13 @@ drop if email==""
 label define responder1 1 "seniorpastor" 2 "onbehalf" 3 "staff" 4 "other"
 label values responder responder1
 
-replace zipcode = substr(zipcode,1,5)
+*Incorrect zipcode format fix
+replace zipcode="75214" if loginid==3773781983
+
+*Turning string zipcode into numeric zip for merging data
+destring zipcode, generate(zip)
+drop zipcode
+
 merge m:1 zipcode using "C:\Users\enochhill\Box\NCCAP\Data\geo-dataNoDuplicateZip.dta"
 drop if _merge==2
 
