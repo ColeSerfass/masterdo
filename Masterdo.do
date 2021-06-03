@@ -1,7 +1,7 @@
 local root="C:\Users\nicho\Box\"
 *local root="C:\Users\Cole\Documents\"
 *local root="C:\Users\ryan\Box\"
-*local root="C:\Users\enoch\Box\"
+*local root="C:\Users\enochhill\Box\"
 
 cd "`root'NCCAP\Data\MasterDo"
 import delimited "`root'NCCAP\Data\20210602\20210602Data.csv", clear
