@@ -132,7 +132,27 @@ drop if email==""
 *Counsultant Entry, not church
 	drop if loginid==6502446840 
 
-
+*Handling duplicate entries
+	drop if inlist(loginid,8524012957,5249223802,2967820084,7656503535,1921755777,1528778903,9234282297,9344416335,9654498424,///
+			5026045169,5157188521,5865794741,8525332015,9311857213,6192038870,9416397423,7486703372,7725390990,2167668752,///
+			4642612033,8781390528,7358814931,5125390311,3454215584,4707619583,3486802190,3047365053,3609179829,4174744250,7761941020,1837292030)
+*Note: 4174744250 is legit but it's a different week for the same church as 8407078484
+	replace flag=flag+"There was a second entry for this church with Login ID: 4174744250; " if loginid==8407078484
+	
+*Merge Berean Baptist Church (loginid, 4501526154, 7761941020)
+	replace trackonlinehow=3 if loginid==4501526154
+	replace screensjan2020=0 if loginid==4501526154
+	replace screensjan2021=225 if loginid==4501526154
+	replace screensmostrecent=270 if loginid==4501526154	
+	
+*Merge The Chapel (loginid,1837292030, 7287147509)
+	replace budgetgiving=4582000 if loginid==7287147509
+	replace actualgiving=3550263 if loginid==7287147509
+	replace paidstaffjan2020="0" if paidstaffjan2020=="nil"
+	replace paidstaffjan2020="67" if loginid==7287147509
+	replace paidstaffcurrent=58 if loginid==7287147509
+	replace cares=2 if loginid==7287147509
+	replace reasonnocaresnaunknown=1 if loginid==7287147509
 //_________________________________________SECTION#3: COUNTY FIPS & POLITICAL AFFILIATION MERGE _________________________________________________//
 
 *Adding FIPS identification based on zip
