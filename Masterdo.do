@@ -143,7 +143,68 @@ tab onlinemostrecent
 replace onlinemostrecent= -99 if onlinemostrecent<0 & onlinemostrecent>-99
 tab onlinemostrecent
 
+*RYAN'S CLEANING:
+*Checking for any typos in reported attendance data (easier this way than doing eye test for every data point)
+*The point of this exercise is to generate a value or ratio for how much the attendance varies for each church over the three time snapshots. The higher the ratio, the more the variance. I flagged all of the ones above 0.89, although some of them may be just fine.
+preserve
+replace onlinejan2020=. if onlinejan2020== -99
+replace onlinejan2021=. if onlinejan2021== -99
+replace onlinemostrecent=. if onlinemostrecent== -99
+replace inpersonjan2020=. if inpersonjan2020== -99
+replace inpersonjan2021=. if inpersonjan2021== -99
+replace inpersonmostrecent=. if inpersonmostrecent== -99
 
+gen totalattendancejan2020=onlinejan2020+inpersonjan2020
+gen totalattendancejan2021=onlinejan2021+inpersonjan2021
+gen totalattendancemostrecent=onlinemostrecent+inpersonmostrecent
+gen attendancediff=((abs(totalattendancejan2020-totalattendancejan2021)+abs(totalattendancejan2020-totalattendancemostrecent)+abs(totalattendancejan2021-totalattendancemostrecent))/3)
+tab attendancediff
+sum attendancediff
+gen avgattendance=((totalattendancejan2020+totalattendancejan2021+totalattendancemostrecent)/3)
+gen attendanceratio=attendancediff/avgattendance
+tab attendanceratio
+sum attendanceratio
+histogram attendanceratio
+*Maybe investigate drastic changes in attendance further to make sure they weren't typos (some are just megachurches that shifted online). Honestly though, it seems reasonable that a few churches had really drastic attendance changes during the pandemic. None of these seem like deliberate typos
+export delimited "attendancediff", replace
+restore
+*Flag suspicious entries (if attendanceratio>0.89) using file I just created. NOTE: some of these may not actually be wrong...I would expect there to be a few churches that have a big change in attendance during the pandemic. 
+replace flag=flag+"suspicious variation in attendance; " if loginid==4952626801
+replace flag=flag+"suspicious variation in attendance; " if loginid==1513955401
+replace flag=flag+"suspicious variation in attendance; " if loginid==8039939879
+replace flag=flag+"suspicious variation in attendance; " if loginid==1017681536
+replace flag=flag+"suspicious variation in attendance; " if loginid==2746175480
+replace flag=flag+"suspicious variation in attendance; " if loginid==3577265032
+replace flag=flag+"suspicious variation in attendance; " if loginid==5281416655
+replace flag=flag+"suspicious variation in attendance; " if loginid==9611610292
+replace flag=flag+"suspicious variation in attendance; " if loginid==5443313159
+replace flag=flag+"suspicious variation in attendance; " if loginid==4533734020
+replace flag=flag+"suspicious variation in attendance; " if loginid==3351272792
+
+*Checking potential issues with # of services
+tab numservices
+
+*ones to drop (based on ratio of attendance to numservices using eye test):
+replace flag=flag+"suspicious numservices; " if numservices>26 & numservices!=.
+replace flag=flag+"suspicious numservices; " if loginid==1063942572
+replace flag=flag+"suspicious numservices; " if loginid==6068997846
+replace flag=flag+"suspicious numservices; " if loginid==4783252749
+replace flag=flag+"suspicious numservices; " if loginid==9146673329
+replace flag=flag+"suspicious numservices; " if loginid==6925724888
+replace flag=flag+"suspicious numservices; " if loginid==4794961958
+replace flag=flag+"suspicious numservices; " if loginid==1498894439
+*For the following church I checked their website, they have 2 services not 20, it must have been a typo
+replace numservices=2 if loginid==4387233961
+
+*Churches to flag and maybe drop (that aren't real churches)
+replace flag=flag+"not a Christian church (it's a "new age spiritual center" or something); " if loginid==4031001069
+replace flag=flag+"Dr. Hill's sample; " if loginid==1047698506
+replace flag=flag+"
+replace flag=flag+"
+replace flag=flag+"
+replace flag=flag+"
+replace flag=flag+"
+*NOTE: I AM NOT FINISHED WITH THIS PART YET 
 
 
 
