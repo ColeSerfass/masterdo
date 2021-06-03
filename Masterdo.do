@@ -329,17 +329,25 @@ restore
 *For the following church I checked their website, they have 2 services not 20, it must have been a typo
 	replace numservices=2 if loginid==4387233961
 
-/*
-*Churches to flag and maybe drop (that aren't real churches)
+
+*Churches to flag and maybe drop (that aren't real churches) (also some other random changes and notes)
 	replace flag=flag+"not a Christian church (it's a 'new age spiritual center' or something); " if loginid==4031001069
 	replace flag=flag+"Dr. Hill's sample; " if loginid==1047698506
-	replace flag=flag+"
-	replace flag=flag+"
-	replace flag=flag+"
-	replace flag=flag+"
-	replace flag=flag+"
-*NOTE: I AM NOT FINISHED WITH THIS PART YET
-*/
+	replace flag=flag+"Church in Germany; " if loginid==4220605590
+	replace flag=flag+"its a ministry not a church; " if loginid==5346578815
+	replace flag=flag+"Church in Mexico; " if loginid==4950754297
+	replace flag=flag+"zip code should be 53146; " if loginid==5166998442
+	replace flag=flag+"name should be Van Nest Assembly of God (not Can Nest); " if loginid==8007502691
+	replace flag=flag+"not a church, no idea what this is; " if loginid==8628775416
+	replace flag=flag+"not sure what/where this is (IFGF?), couldn't find it on google; " if loginid==6225679965
+	replace flag=flag+"don't think this is a church; " if loginid==3648699035
+	replace flag=flag+"this is a retirement home, not a church; " if loginid==3938655173
+	replace flag=flag+"not a church; " if loginid==5663217349
+	replace flag=flag+""church in nigeria; " if loginid==2597394048
+	replace flag=flag+"catholic church!; " if loginid==7248275069
+	replace flag=flag+"church name not written in a readable language; " if loginid==9893706952
+	
+*NOTE: We will have to decide which ones to drop eventually
 
 
 //_________________________________________SECTION#:6 _________________________________________________//
