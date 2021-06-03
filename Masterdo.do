@@ -7,7 +7,7 @@ cd "`root'NCCAP\Data\MasterDo"
 import delimited "`root'NCCAP\Data\20210602\20210602Data.csv", clear
 
 
-//_________________________________________SECTION#1: vARIABLE & LABEL FORMATTING _________________________________________________//
+//_________________________________________SECTION#1: VARIABLE & LABEL FORMATTING _________________________________________________//
 
 *Variable "startdate" formatting
 	gen startdate2=date(startdate,"MDY##")
@@ -56,6 +56,9 @@ import delimited "`root'NCCAP\Data\20210602\20210602Data.csv", clear
 *Variable "trackonlinehow" numerical identification
 	label define trackonlinehow1 1 "Screens" 2 "Viewers" 3 "Both" 4 "Other"
 	label values trackonlinehow trackonlinehow1
+	
+*Fixing variable name typos
+	rename contryother countryother
 
 
 //_________________________________________SECTION#2: CLEANING AND FLAGGING DATA _________________________________________________//
@@ -80,25 +83,25 @@ drop if email==""
 	drop if loginid==1851175199 
 *Editing international zipcodes 
 	replace country=3 if zip==100 
-	replace contryother="Kenya" if zip==100
+	replace countryother="Kenya" if zip==100
 	replace country=3 if zip==184
-	replace contryother="Cameroon" if zip==184
+	replace countryother="Cameroon" if zip==184
 	replace country=3 if zip==234
-	replace contryother="Nigeria" if zip==234
+	replace countryother="Nigeria" if zip==234
 	replace country=3 if zip==256
-	replace contryother="South Africa" if zip==256
+	replace countryother="South Africa" if zip==256
 	replace country=3 if zip==18765
-	replace contryother="Jamaica" if zip==18765
+	replace countryother="Jamaica" if zip==18765
 	replace country=3 if zip==20219
-	replace contryother="Republic of Congo" if zip==20219
+	replace countryother="Republic of Congo" if zip==20219
 	replace country=3 if zip==57100
-	replace contryother="Malaysia" if zip==57100
+	replace countryother="Malaysia" if zip==57100
 	replace country=3 if zip==77500
-	replace contryother="Mexico" if zip==77500
+	replace countryother="Mexico" if zip==77500
 	replace country=2 if loginid==775007269248510
 	replace postalcanada="N5Z 5A9" if loginid==775007269248510
 	replace country=3 if loginid==775007269248510
-	replace contryother="Costa Rica" if loginid==4444303639
+	replace countryother="Costa Rica" if loginid==4444303639
 *Real churches, unknown location 
 	replace country=1 if zip==263
 	replace flag=flag+"Unknown US location; " if loginid==7289550079
@@ -125,63 +128,65 @@ drop if email==""
 merge m:1 zipcode using "C:\Users\enochhill\Box\NCCAP\Data\geo-dataNoDuplicateZip.dta"
 drop if _merge==2
 
+//_________________________________________SECTION#3: MULTIPLIERS &  _________________________________________________//
+
 *Handle unusual multipliers
-replace trackviewershowmultiplier="1.7" if trackviewershowmultiplier=="1.7 per viewer"
-replace trackviewershowmultiplier="2" if trackviewershowmultiplier=="x2" | trackviewershowmultiplier=="X2" | trackviewershowmultiplier=="two"
-replace trackviewershowmultiplier="2.5" if trackviewershowmultiplier=="Engagements x 2.5" | trackviewershowmultiplier=="Screens x 2.5"
-replace trackviewershowmultiplier="1" if trackviewershowmultiplier=="None"
-replace trackviewershowmultiplier="1" if trackviewershowmultiplier == "150-200 weekly" | trackviewershowmultiplier == "3800" | trackviewershowmultiplier == "300"
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowmultiplier,"simply record number of views. *")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowmultiplier,"Weig*")
+	replace trackviewershowmultiplier="1.7" if trackviewershowmultiplier=="1.7 per viewer"
+	replace trackviewershowmultiplier="2" if trackviewershowmultiplier=="x2" | trackviewershowmultiplier=="X2" | trackviewershowmultiplier=="two"
+	replace trackviewershowmultiplier="2.5" if trackviewershowmultiplier=="Engagements x 2.5" | trackviewershowmultiplier=="Screens x 2.5"
+	replace trackviewershowmultiplier="1" if trackviewershowmultiplier=="None"
+	replace trackviewershowmultiplier="1" if trackviewershowmultiplier == "150-200 weekly" | trackviewershowmultiplier == "3800" | trackviewershowmultiplier == "300"
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowmultiplier,"simply record number of views. *")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowmultiplier,"Weig*")
 
 *Handle "other" view methods
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"We count the number of people*")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"don't use a multiplier*")
-replace trackviewershowmultiplier="1.7" if strmatch(trackviewershowother,"Peak Live Views X 1.7*")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"We are a small church have an accurate accounting")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"number of comments and feedback from viewers")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"Number of views greater than 1 or 3 minutes")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"Online connect card allows multiple viewers to be accounted for")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"We actually count individuals connected")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"Track online vs on-demand as separate metrics")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"We track total minutes of live message viewed / 45 minutes per HH to come up with a concervative measure of HH watching via Livestream. We also track unique views for YouTube channel.")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"number of views as shown weekly")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"We use number of views reported by FB and YouTube")
-replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"I look at Facebook analytics and track viewers who engage for longer than 60 seconds.*")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"We count the number of people*")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"don't use a multiplier*")
+	replace trackviewershowmultiplier="1.7" if strmatch(trackviewershowother,"Peak Live Views X 1.7*")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"We are a small church have an accurate accounting")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"number of comments and feedback from viewers")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"Number of views greater than 1 or 3 minutes")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"Online connect card allows multiple viewers to be accounted for")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"We actually count individuals connected")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"Track online vs on-demand as separate metrics")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"We track total minutes of live message viewed / 45 minutes per HH to come up with a concervative measure of HH watching via Livestream. We also track unique views for YouTube channel.")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"number of views as shown weekly")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"We use number of views reported by FB and YouTube")
+	replace trackviewershowmultiplier="1" if strmatch(trackviewershowother,"I look at Facebook analytics and track viewers who engage for longer than 60 seconds.*")
 
 *Handle other watching methods (trackonlinehow)
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Engagements")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We use the reporting feature of Zoom to track precisely who is logged in on Zoom. We also livestream through Facebook Live. We track the number of views, even though we don't know how long the video was viewed, and we ask people to leave a comment so that we know they worshiped with us.")
-replace trackviewershowmultiplier="0.8" if strmatch(trackonlinehowother,"Views x .8")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We ask viewers to comment their attendance")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Households-Unique IP addresses")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Peak live viewers on FB")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Our online attendance*")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We use a combo of interactions and streaming report data ")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Engagements")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We use the reporting feature of Zoom to track precisely who is logged in on Zoom. We also livestream through Facebook Live. We track the number of views, even though we don't know how long the video was viewed, and we ask people to leave a comment so that we know they worshiped with us.")
+	replace trackviewershowmultiplier="0.8" if strmatch(trackonlinehowother,"Views x .8")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We ask viewers to comment their attendance")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Households-Unique IP addresses")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Peak live viewers on FB")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Our online attendance*")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We use a combo of interactions and streaming report data ")
 * Seems like this next one is using a multiplier but no way to tell what it is without asking them
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"viewer/engagement formula")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We use a combo of interactions and streaming report data")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Maximum simultanious viewers")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Google Analytics")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"30 minute views")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We communicate online and people identify themselves along with views.")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"we did it by phone")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Online Engagement")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"count views on FB and YouTube")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Views and logged attendance via website")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"ip addresses")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"I'm not totally sure.")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"I don't know")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Ip addresses")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"comments/viewers")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Online Connection Card")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We track minutes consumed although we have all data captured and available.  We decided it was a fools bargain to try an equate online attendance to in-person attendance but with pre-registered in-person, we're able to do some interesting analysis on equating minutes into people.")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Maximum simultanious viewers")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"sustained viewing only of unique viewers")
-replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Maximum simultanious viewers")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"viewer/engagement formula")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We use a combo of interactions and streaming report data")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Maximum simultanious viewers")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Google Analytics")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"30 minute views")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We communicate online and people identify themselves along with views.")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"we did it by phone")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Online Engagement")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"count views on FB and YouTube")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Views and logged attendance via website")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"ip addresses")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"I'm not totally sure.")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"I don't know")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Ip addresses")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"comments/viewers")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Online Connection Card")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We track minutes consumed although we have all data captured and available.  We decided it was a fools bargain to try an equate online attendance to in-person attendance but with pre-registered in-person, we're able to do some interesting analysis on equating minutes into people.")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Maximum simultanious viewers")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"sustained viewing only of unique viewers")
+	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Maximum simultanious viewers")
 *The following line is an error from Dr. Hill's code that I fixed
-replace trackviewershowmultiplier="1" if trackviewershowmultiplier=="-99"
-destring trackviewershowmultiplier, replace
+	replace trackviewershowmultiplier="1" if trackviewershowmultiplier=="-99"
+	destring trackviewershowmultiplier, replace
 
 replace onlinejan2020=screensjan2020 if trackonlinehow==1 | trackonlinehow==3
 replace onlinejan2020=viewersjan2020/trackviewershowmultiplier if trackonlinehow==2
