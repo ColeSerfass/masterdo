@@ -1,6 +1,7 @@
 cd "C:\Users\enochhill\Box\NCCAP\Data"
 import delimited "C:\Users\enochhill\Box\NCCAP\Data\20210511\20210514Data.csv", clear
 
+
 *CLEANING AND FLAGGING DATA
 *Flagged IDs
 gen flag="New Church" if loginid==1898682227
