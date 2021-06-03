@@ -133,10 +133,23 @@ drop if email==""
 	drop if loginid==6502446840 
 
 
-merge m:1 zipcode using "C:\Users\enochhill\Box\NCCAP\Data\geo-dataNoDuplicateZip.dta"
-drop if _merge==2
+//_________________________________________SECTION#3: COUNTY FIPS & POLITICAL AFFILIATION MERGE _________________________________________________//
 
-//_________________________________________SECTION#3: TYPES OF ONLINE VIEWING TRACKING (MULTIPLIERS,ETC) _________________________________________________//
+*Adding FIPS identification based on zip
+	merge m:1 zip using ziptofips
+
+*Dropping empty merge & non-US observations
+	drop if responseid==""
+	drop if country==2 | country==3
+	drop _merge
+
+*Adding presidential election info (party votes by county)
+	merge m:m county_fips using densitypolit
+	drop if responseid==""
+	sort _merge
+	
+
+//_________________________________________SECTION#4: TYPES OF ONLINE VIEWING TRACKING (MULTIPLIERS,ETC) _________________________________________________//
 
 *Handle unusual multipliers
 	replace trackviewershowmultiplier="1.7" if trackviewershowmultiplier=="1.7 per viewer"
@@ -212,7 +225,7 @@ drop if _merge==2
 	replace onlinemostrecent=onlinemostrecent/trackviewershowmultiplier if trackonlinehow==4
 
 
-//_________________________________________SECTION#:4 RYAN'S SWEEP OF ONLINE & IN-PERSON ATTENDANCE _________________________________________________//
+//_________________________________________SECTION#:5 RYAN'S SWEEP OF ONLINE & IN-PERSON ATTENDANCE _________________________________________________//
 *RYAN'S CLEANING:
 
 *Fixing some negative numbers (people said they estimated the number of viewers with a multiplier but didn't record any online attendence data, resulting in the -99s being divided by 2 and then impacting attendance data)
@@ -293,28 +306,7 @@ restore
 *NOTE: I AM NOT FINISHED WITH THIS PART YET
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//_________________________________________SECTION#:6 _________________________________________________//
 
 *CHARTS AND GRAPHS
 *Scatterplot Charts
