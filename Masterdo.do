@@ -1,5 +1,10 @@
-cd "C:\Users\enochhill\Box\NCCAP\Data"
-import delimited "C:\Users\enochhill\Box\NCCAP\Data\20210511\20210514Data.csv", clear
+local root="C:\Users\nicho\Box\"
+*local root="C:\Users\cole\Box\"
+*local root="C:\Users\ryan\Box\"
+*local root="C:\Users\enoch\Box\"
+
+cd "`root'NCCAP\Data\MasterDo"
+import delimited "`root'NCCAP\Data\20210602\20210602Data.csv", clear
 
 
 *CLEANING AND FLAGGING DATA
