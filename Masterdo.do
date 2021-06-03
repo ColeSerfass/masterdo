@@ -59,6 +59,49 @@ drop zipcode
 merge m:1 zipcode using "C:\Users\enochhill\Box\NCCAP\Data\geo-dataNoDuplicateZip.dta"
 drop if _merge==2
 
+*Editing international zipcodes 
+	replace country=3 if zip==100 
+	replace contryother="Kenya" if zip==100
+	replace country=3 if zip==184
+	replace contryother="Cameroon" if zip==184
+	replace country=3 if zip==234
+	replace contryother="Nigeria" if zip==234
+	replace country=3 if zip==256
+	replace contryother="South Africa" if zip==256
+	replace country=3 if zip==18765
+	replace contryother="Jamaica" if zip==18765
+	replace country=3 if zip==20219
+	replace contryother="Republic of Congo" if zip==20219
+	replace country=3 if zip==57100
+	replace contryother="Malaysia" if zip==57100
+	replace country=3 if zip==77500
+	replace contryother="Mexico" if zip==77500
+	replace country=2 if loginid==775007269248510
+	replace postalcanada="N5Z 5A9" if loginid==775007269248510
+	replace country=3 if loginid==775007269248510
+	replace contryother="Costa Rica" if loginid==4444303639
+*Real churches, unknown location 
+	replace country=1 if zip==263
+	replace flag=flag+"Unknown US location; " if loginid==7289550079
+	replace flag=flag+"Unknown church location; " if loginid==6933425060
+	replace country=1 if loginid==7499627604
+	replace flag=flag+"Unknown US location; " if loginid==7499627604
+	replace flag=flag+"Unknown church location; " if loginid==8847224583
+	replace country=1 if loginid==5281416655
+	replace flag=flag+"Unknown US location; " if loginid==5281416655
+*Typo according to the church website
+	replace zip=98072 if zip==98082
+	replace zip=60108 if zip==160
+	replace zip=29180 if zip==29189
+	replace zip=02339 if zip==2340
+	replace zip=73003 if loginid==4794961958
+*Identical county and city
+	replace zip=99801 if zip==99803
+	replace zip=27505 if zip==27506
+	replace zip=75214 if loginid==3773781983
+*Counsultant Entry, not church
+	drop if loginid==6502446840 
+
 label define denomination1 611 "Adventist" 608 "Anglican" 601 "Baptist" 600 "Catholic" 610 "Congregational Church" 609 "Holiness" 605 "Lutheran" 603 "Methodist/Wesleyan" 602 "Nondenominational" 604 "Pentecostal" 606 "Presbyterian/Reformed" 607 "Restorationist" 612 "Other"
 label values denomination denomination1
 
