@@ -73,14 +73,18 @@ drop if email==""
 	replace flag="Jan2020 suspect" if loginid==5368830490
 	replace flag="Online only" if loginid==2030355526
 	replace flag="Almost all online, odd pattern" if loginid==2235356149
+
 *Error in attendance data?
 	drop if loginid==9275200923 
 	drop if loginid==5368830490
 	drop if loginid==2235356149
+
 *This one seems like an error, only had attendance in Jan 2021 but not in Jan 2020 or April 2021?
 	drop if loginid==1898682227 
+
 *seems like a fake entry
 	drop if loginid==1851175199 
+
 *Editing international zipcodes 
 	replace country=3 if zip==100 
 	replace countryother="Kenya" if zip==100
@@ -102,6 +106,7 @@ drop if email==""
 	replace postalcanada="N5Z 5A9" if loginid==775007269248510
 	replace country=3 if loginid==775007269248510
 	replace countryother="Costa Rica" if loginid==4444303639
+
 *Real churches, unknown location 
 	replace country=1 if zip==263
 	replace flag=flag+"Unknown US location; " if loginid==7289550079
@@ -111,16 +116,19 @@ drop if email==""
 	replace flag=flag+"Unknown church location; " if loginid==8847224583
 	replace country=1 if loginid==5281416655
 	replace flag=flag+"Unknown US location; " if loginid==5281416655
+
 *Typo according to the church website
 	replace zip=98072 if zip==98082
 	replace zip=60108 if zip==160
 	replace zip=29180 if zip==29189
 	replace zip=02339 if zip==2340
 	replace zip=73003 if loginid==4794961958
+
 *Identical county and city
 	replace zip=99801 if zip==99803
 	replace zip=27505 if zip==27506
 	replace zip=75214 if loginid==3773781983
+
 *Counsultant Entry, not church
 	drop if loginid==6502446840 
 
@@ -128,7 +136,7 @@ drop if email==""
 merge m:1 zipcode using "C:\Users\enochhill\Box\NCCAP\Data\geo-dataNoDuplicateZip.dta"
 drop if _merge==2
 
-//_________________________________________SECTION#3: MULTIPLIERS &  _________________________________________________//
+//_________________________________________SECTION#3: TYPES OF ONLINE VIEWING TRACKING (MULTIPLIERS,ETC) _________________________________________________//
 
 *Handle unusual multipliers
 	replace trackviewershowmultiplier="1.7" if trackviewershowmultiplier=="1.7 per viewer"
@@ -163,6 +171,7 @@ drop if _merge==2
 	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Peak live viewers on FB")
 	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Our online attendance*")
 	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We use a combo of interactions and streaming report data ")
+
 * Seems like this next one is using a multiplier but no way to tell what it is without asking them
 	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"viewer/engagement formula")
 	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"We use a combo of interactions and streaming report data")
@@ -184,96 +193,103 @@ drop if _merge==2
 	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Maximum simultanious viewers")
 	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"sustained viewing only of unique viewers")
 	replace trackviewershowmultiplier="1" if strmatch(trackonlinehowother,"Maximum simultanious viewers")
-*The following line is an error from Dr. Hill's code that I fixed
+
+*Fixed error from Dr. Hill's code (Ryan)
 	replace trackviewershowmultiplier="1" if trackviewershowmultiplier=="-99"
 	destring trackviewershowmultiplier, replace
 
-replace onlinejan2020=screensjan2020 if trackonlinehow==1 | trackonlinehow==3
-replace onlinejan2020=viewersjan2020/trackviewershowmultiplier if trackonlinehow==2
-replace onlinejan2020=onlinejan2020/trackviewershowmultiplier if trackonlinehow==4
+*Computing online numbers for different time periods based on different ways of tracking
+	replace onlinejan2020=screensjan2020 if trackonlinehow==1 | trackonlinehow==3
+	replace onlinejan2020=viewersjan2020/trackviewershowmultiplier if trackonlinehow==2
+	replace onlinejan2020=onlinejan2020/trackviewershowmultiplier if trackonlinehow==4
 
-replace onlinejan2021=screensjan2021 if trackonlinehow==1 | trackonlinehow==3
-replace onlinejan2021=viewersjan2021/trackviewershowmultiplier if trackonlinehow==2
-replace onlinejan2021=onlinejan2021/trackviewershowmultiplier if trackonlinehow==4
+	replace onlinejan2021=screensjan2021 if trackonlinehow==1 | trackonlinehow==3
+	replace onlinejan2021=viewersjan2021/trackviewershowmultiplier if trackonlinehow==2
+	replace onlinejan2021=onlinejan2021/trackviewershowmultiplier if trackonlinehow==4
 
-replace onlinemostrecent=screensmostrecent if trackonlinehow==1 | trackonlinehow==3
-replace onlinemostrecent=viewersmostrecent/trackviewershowmultiplier if trackonlinehow==2
-replace onlinemostrecent=onlinemostrecent/trackviewershowmultiplier if trackonlinehow==4
+	replace onlinemostrecent=screensmostrecent if trackonlinehow==1 | trackonlinehow==3
+	replace onlinemostrecent=viewersmostrecent/trackviewershowmultiplier if trackonlinehow==2
+	replace onlinemostrecent=onlinemostrecent/trackviewershowmultiplier if trackonlinehow==4
 
+
+//_________________________________________SECTION#:4 RYAN'S SWEEP OF ONLINE & IN-PERSON ATTENDANCE _________________________________________________//
 *RYAN'S CLEANING:
+
 *Fixing some negative numbers (people said they estimated the number of viewers with a multiplier but didn't record any online attendence data, resulting in the -99s being divided by 2 and then impacting attendance data)
-tab onlinejan2020
-replace onlinejan2020= -99 if onlinejan2020<0 & onlinejan2020>-99
-tab onlinejan2020
+	tab onlinejan2020
+	replace onlinejan2020= -99 if onlinejan2020<0 & onlinejan2020>-99
+	tab onlinejan2020
 
-tab onlinejan2021
-replace onlinejan2021= -99 if onlinejan2021<0 & onlinejan2021>-99
-tab onlinejan2021
+	tab onlinejan2021
+	replace onlinejan2021= -99 if onlinejan2021<0 & onlinejan2021>-99
+	tab onlinejan2021
 
-tab onlinemostrecent
-replace onlinemostrecent= -99 if onlinemostrecent<0 & onlinemostrecent>-99
-tab onlinemostrecent
+	tab onlinemostrecent
+	replace onlinemostrecent= -99 if onlinemostrecent<0 & onlinemostrecent>-99
+	tab onlinemostrecent
 
 *Checking for any typos in reported attendance data (easier this way than doing eye test for every data point)
 *The point of this exercise is to generate a value or ratio for how much the attendance varies for each church over the three time snapshots. The higher the ratio, the more the variance. I flagged all of the ones above 0.89, although some of them may be just fine.
 preserve
-replace onlinejan2020=. if onlinejan2020== -99
-replace onlinejan2021=. if onlinejan2021== -99
-replace onlinemostrecent=. if onlinemostrecent== -99
-replace inpersonjan2020=. if inpersonjan2020== -99
-replace inpersonjan2021=. if inpersonjan2021== -99
-replace inpersonmostrecent=. if inpersonmostrecent== -99
+	replace onlinejan2020=. if onlinejan2020== -99
+	replace onlinejan2021=. if onlinejan2021== -99
+	replace onlinemostrecent=. if onlinemostrecent== -99
+	replace inpersonjan2020=. if inpersonjan2020== -99
+	replace inpersonjan2021=. if inpersonjan2021== -99
+	replace inpersonmostrecent=. if inpersonmostrecent== -99
 
-gen totalattendancejan2020=onlinejan2020+inpersonjan2020
-gen totalattendancejan2021=onlinejan2021+inpersonjan2021
-gen totalattendancemostrecent=onlinemostrecent+inpersonmostrecent
-gen attendancediff=((abs(totalattendancejan2020-totalattendancejan2021)+abs(totalattendancejan2020-totalattendancemostrecent)+abs(totalattendancejan2021-totalattendancemostrecent))/3)
-tab attendancediff
-sum attendancediff
-gen avgattendance=((totalattendancejan2020+totalattendancejan2021+totalattendancemostrecent)/3)
-gen attendanceratio=attendancediff/avgattendance
-tab attendanceratio
-sum attendanceratio
-histogram attendanceratio
+	gen totalattendancejan2020=onlinejan2020+inpersonjan2020
+	gen totalattendancejan2021=onlinejan2021+inpersonjan2021
+	gen totalattendancemostrecent=onlinemostrecent+inpersonmostrecent
+	gen attendancediff=((abs(totalattendancejan2020-totalattendancejan2021)+abs(totalattendancejan2020-totalattendancemostrecent)+abs(totalattendancejan2021-totalattendancemostrecent))/3)
+	tab attendancediff
+	sum attendancediff
+	gen avgattendance=((totalattendancejan2020+totalattendancejan2021+totalattendancemostrecent)/3)
+	gen attendanceratio=attendancediff/avgattendance
+	tab attendanceratio
+	sum attendanceratio
+	histogram attendanceratio
+	
 *Maybe investigate drastic changes in attendance further to make sure they weren't typos (some are just megachurches that shifted online). Honestly though, it seems reasonable that a few churches had really drastic attendance changes during the pandemic. None of these seem like deliberate typos
-export delimited "attendancediff", replace
+	export delimited "attendancediff", replace
 restore
+
 *Flag suspicious entries (if attendanceratio>0.89) using file I just created. NOTE: some of these may not actually be wrong...I would expect there to be a few churches that have a big change in attendance during the pandemic. 
-replace flag=flag+"suspicious variation in attendance; " if loginid==4952626801
-replace flag=flag+"suspicious variation in attendance; " if loginid==1513955401
-replace flag=flag+"suspicious variation in attendance; " if loginid==8039939879
-replace flag=flag+"suspicious variation in attendance; " if loginid==1017681536
-replace flag=flag+"suspicious variation in attendance; " if loginid==2746175480
-replace flag=flag+"suspicious variation in attendance; " if loginid==3577265032
-replace flag=flag+"suspicious variation in attendance; " if loginid==5281416655
-replace flag=flag+"suspicious variation in attendance; " if loginid==9611610292
-replace flag=flag+"suspicious variation in attendance; " if loginid==5443313159
-replace flag=flag+"suspicious variation in attendance; " if loginid==4533734020
-replace flag=flag+"suspicious variation in attendance; " if loginid==3351272792
+	replace flag=flag+"suspicious variation in attendance; " if loginid==4952626801
+	replace flag=flag+"suspicious variation in attendance; " if loginid==1513955401
+	replace flag=flag+"suspicious variation in attendance; " if loginid==8039939879
+	replace flag=flag+"suspicious variation in attendance; " if loginid==1017681536
+	replace flag=flag+"suspicious variation in attendance; " if loginid==2746175480
+	replace flag=flag+"suspicious variation in attendance; " if loginid==3577265032
+	replace flag=flag+"suspicious variation in attendance; " if loginid==5281416655
+	replace flag=flag+"suspicious variation in attendance; " if loginid==9611610292
+	replace flag=flag+"suspicious variation in attendance; " if loginid==5443313159
+	replace flag=flag+"suspicious variation in attendance; " if loginid==4533734020
+	replace flag=flag+"suspicious variation in attendance; " if loginid==3351272792
 
 *Checking potential issues with # of services
-tab numservices
+	tab numservices
 
 *ones to drop (based on ratio of attendance to numservices using eye test):
-replace flag=flag+"suspicious numservices; " if numservices>26 & numservices!=.
-replace flag=flag+"suspicious numservices; " if loginid==1063942572
-replace flag=flag+"suspicious numservices; " if loginid==6068997846
-replace flag=flag+"suspicious numservices; " if loginid==4783252749
-replace flag=flag+"suspicious numservices; " if loginid==9146673329
-replace flag=flag+"suspicious numservices; " if loginid==6925724888
-replace flag=flag+"suspicious numservices; " if loginid==4794961958
-replace flag=flag+"suspicious numservices; " if loginid==1498894439
+	replace flag=flag+"suspicious numservices; " if numservices>26 & numservices!=.
+	replace flag=flag+"suspicious numservices; " if loginid==1063942572
+	replace flag=flag+"suspicious numservices; " if loginid==6068997846
+	replace flag=flag+"suspicious numservices; " if loginid==4783252749
+	replace flag=flag+"suspicious numservices; " if loginid==9146673329
+	replace flag=flag+"suspicious numservices; " if loginid==6925724888
+	replace flag=flag+"suspicious numservices; " if loginid==4794961958
+	replace flag=flag+"suspicious numservices; " if loginid==1498894439
 *For the following church I checked their website, they have 2 services not 20, it must have been a typo
-replace numservices=2 if loginid==4387233961
+	replace numservices=2 if loginid==4387233961
 
 *Churches to flag and maybe drop (that aren't real churches)
-replace flag=flag+"not a Christian church (it's a "new age spiritual center" or something); " if loginid==4031001069
-replace flag=flag+"Dr. Hill's sample; " if loginid==1047698506
-replace flag=flag+"
-replace flag=flag+"
-replace flag=flag+"
-replace flag=flag+"
-replace flag=flag+"
+	replace flag=flag+"not a Christian church (it's a "new age spiritual center" or something); " if loginid==4031001069
+	replace flag=flag+"Dr. Hill's sample; " if loginid==1047698506
+	replace flag=flag+"
+	replace flag=flag+"
+	replace flag=flag+"
+	replace flag=flag+"
+	replace flag=flag+"
 *NOTE: I AM NOT FINISHED WITH THIS PART YET
 
 
