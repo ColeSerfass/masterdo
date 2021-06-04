@@ -1,5 +1,5 @@
 local root="C:\Users\nicho\Box\"
-*local root="C:\Users\Cole\Documents\"
+*local root="C:\Users\Cole\Box\"
 *local root="C:\Users\ryan\Box\"
 *local root="C:\Users\enochhill\Box\"
 
@@ -132,10 +132,10 @@ drop if email==""
 *Counsultant Entry, not church
 	drop if loginid==6502446840 
 
+	
+	
 *Handling duplicate entries
-	drop if inlist(loginid,8524012957,5249223802,2967820084,7656503535,1921755777,1528778903,9234282297,9344416335,9654498424,///
-			5026045169,5157188521,5865794741,8525332015,9311857213,6192038870,9416397423,7486703372,7725390990,2167668752,///
-			4642612033,8781390528,7358814931,5125390311,3454215584,4707619583,3486802190,3047365053,3609179829,4174744250,7761941020,1837292030)
+	drop if inlist(loginid,8524012957,5249223802,2967820084,7656503535,1921755777,1528778903,9234282297,9344416335,9654498424, 5026045169,5157188521,5865794741,8525332015,9311857213,6192038870,9416397423,7486703372,7725390990,2167668752, 4642612033,8781390528,7358814931,5125390311,3454215584,4707619583,3486802190,3047365053,3609179829,4174744250,7761941020,1837292030)
 *Note: 4174744250 is legit but it's a different week for the same church as 8407078484
 	replace flag=flag+"There was a second entry for this church with Login ID: 4174744250; " if loginid==8407078484
 	
@@ -157,6 +157,10 @@ drop if email==""
 * Generate a flag for small churches which couldn't be verified as existing through online search
 * This flag should be set to 1 for all churches with <100 in the field inpersonjan2020 which were unable to be verified as existing through an online search
 	gen unverifiedSmall=0
+	*Nottingham Courts (APT Complex)
+	replace unverifiedSmall = 1 if loginid == 2019721370
+	*Tent City Ministries
+	replace unverifiedSmall = 1 if loginid == 8799440868
 
 
 //_________________________________________SECTION#3: COUNTY FIPS & POLITICAL AFFILIATION MERGE _________________________________________________//
@@ -329,7 +333,7 @@ restore
 	replace flag=flag+"suspicious numservices; " if loginid==6068997846
 	replace flag=flag+"suspicious numservices; " if loginid==4783252749
 	replace flag=flag+"suspicious numservices; " if loginid==9146673329
-	replace flag=flag+"suspicious numservices; " if loginid==6925724888
+	*replace flag=flag+"suspicious numservices; " if loginid==6925724888 (dropped later)
 	replace flag=flag+"suspicious numservices; " if loginid==4794961958
 	replace flag=flag+"suspicious numservices; " if loginid==1498894439
 *For the following church I checked their website, they have 2 services not 20, it must have been a typo
@@ -349,11 +353,19 @@ restore
 	replace flag=flag+"don't think this is a church; " if loginid==3648699035
 	replace flag=flag+"this is a retirement home, not a church; " if loginid==3938655173
 	replace flag=flag+"not a church; " if loginid==5663217349
-	replace flag=flag+""church in nigeria; " if loginid==2597394048
+	replace flag=flag+"church in nigeria; " if loginid==2597394048
 	replace flag=flag+"catholic church!; " if loginid==7248275069
 	replace flag=flag+"church name not written in a readable language; " if loginid==9893706952
 	
 *NOTE: We will have to decide which ones to drop eventually
+
+*Cole Drops
+	*Donald Ferguson youth evanglist, can't be found via search
+	drop if loginid==6925724888
+	*IPC, very vague, not US, can't be found via search
+	drop if loginid == 2553730583
+	*New Pres. Church, didn't finish the survey, too vague to find online.
+	drop if loginid == 9720414599
 
 
 //_________________________________________SECTION#:6 _________________________________________________//
