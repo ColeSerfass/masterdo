@@ -153,6 +153,12 @@ drop if email==""
 	replace paidstaffcurrent=58 if loginid==7287147509
 	replace cares=2 if loginid==7287147509
 	replace reasonnocaresnaunknown=1 if loginid==7287147509
+	
+* Generate a flag for small churches which couldn't be verified as existing through online search
+* This flag should be set to 1 for all churches with <100 in the field inpersonjan2020 which were unable to be verified as existing through an online search
+	gen unverifiedSmall=0
+
+
 //_________________________________________SECTION#3: COUNTY FIPS & POLITICAL AFFILIATION MERGE _________________________________________________//
 
 *Adding FIPS identification based on zip
