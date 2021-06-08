@@ -367,6 +367,36 @@ restore
 	*New Pres. Church, didn't finish the survey, too vague to find online.
 	drop if loginid == 9720414599
 
+*RYAN'S CHECK TO SEE WHICH CHURCHES HAVE DONE "WELL"
+*The churches I put into this list all have: >=50% attendance growth, had at least 50 attendees in Jan 2020 (since growth from 10 people to 15 isn't a very impressive 50% growth), and all had a minimum of a -10% change from budgeted 2020 giving to actual 2020 giving
+preserve
+replace onlinejan2020=. if onlinejan2020== -99
+replace onlinejan2021=. if onlinejan2021== -99
+replace onlinemostrecent=. if onlinemostrecent== -99
+replace inpersonjan2020=. if inpersonjan2020== -99
+replace inpersonjan2021=. if inpersonjan2021== -99
+replace inpersonmostrecent=. if inpersonmostrecent== -99
+
+gen totalattendancejan2020=onlinejan2020+inpersonjan2020
+gen totalattendancejan2021=onlinejan2021+inpersonjan2021
+gen totalattendancemostrecent=onlinemostrecent+inpersonmostrecent
+
+gen attendancepercentchange=((totalattendancemostrecent-totalattendancejan2020)/(totalattendancejan2020))*100
+tab attendancepercentchange
+replace flag=flag+ "50-100% attendance increase; " if attendancepercentchange>=50 & attendancepercentchange<100 & attendancepercentchange!=.
+replace flag=flag+ "100-200% attendance increase; " if attendancepercentchange>=100 & attendancepercentchange<200 & attendancepercentchange!=.
+replace flag=flag+ "200+% attendance increase" if attendancepercentchange>=200 & attendancepercentchange!=.
+
+keep if attendancepercentchange>=50 & attendancepercentchange!=.
+keep if totalattendancejan2020>=50
+
+keep if budgetgiving>0
+gen givingpercentchange=((actualgiving-budgetgiving)/(budgetgiving))*100
+tab givingpercentchange
+keep if givingpercentchange>=-10
+
+export delimited churchesthatdidwell, replace
+restore
 
 //_________________________________________SECTION#:6 _________________________________________________//
 
