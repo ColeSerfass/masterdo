@@ -368,7 +368,7 @@ restore
 
 	*fixed some typos here
 	replace zip=53146 if loginid==5166998442
-	replace churchname=Van Nest Assembly of God if loginid==8007502691
+	replace churchname="Van Nest Assembly of God" if loginid==8007502691
 
 *Cole Drops
 	*Donald Ferguson youth evanglist, can't be found via search
