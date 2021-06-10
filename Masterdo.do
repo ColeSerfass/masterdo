@@ -155,8 +155,8 @@ drop if email==""
 *Merge The Chapel (loginid,1837292030, 7287147509)
 	replace budgetgiving=4582000 if loginid==7287147509
 	replace actualgiving=3550263 if loginid==7287147509
-	replace paidstaffjan2020="0" if paidstaffjan2020=="nil"
-	replace paidstaffjan2020="67" if loginid==7287147509
+*	replace paidstaffjan2020="0" if paidstaffjan2020=="nil"
+	replace paidstaffjan2020=67 if loginid==7287147509
 	replace paidstaffcurrent=58 if loginid==7287147509
 	replace cares=2 if loginid==7287147509
 	replace reasonnocaresnaunknown=1 if loginid==7287147509
@@ -613,8 +613,8 @@ replace size=3 if inpersonjan2020>=1000
 replace size=3 if loginid==5381936596
 replace size=3 if loginid==2030355526
 
-replace paidstaffjan2020="0" if strmatch(paidstaffjan2020,"nil")
-replace paidstaffjan2020="0.5" if strmatch(paidstaffjan2020,"2-Jan")
+* replace paidstaffjan2020="0" if strmatch(paidstaffjan2020,"nil")
+* replace paidstaffjan2020="0.5" if strmatch(paidstaffjan2020,"2-Jan")
 destring paidstaffjan2020, replace force
 sort paidstaffjan2020
 drop if paidstaffjan2020>500
