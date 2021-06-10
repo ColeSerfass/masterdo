@@ -1,5 +1,5 @@
-cd "C:\Users\nicho\Box\NCCAP\Data\NicholeShepherd"
-import delimited "C:\Users\nicho\OneDrive\Рабочий стол\Work\NCCAP\6_02\Church+Attendance+Initiative+(Dynamic)_June+2,+2021_08.28.csv", clear 
+cd "C:\Users\nicho\Box\NCCAP\Data\MasterDo"
+import delimited "C:\Users\nicho\Box\NCCAP\Data\20210602\Church+Attendance+Initiative+(Dynamic)_June+2,+2021_08.28.csv", clear 
 
 *Drop observations with no attendance data
 drop if (inpersonupd==. & onlineattendanceupd==.)
