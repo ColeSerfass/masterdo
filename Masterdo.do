@@ -170,6 +170,7 @@ drop if email==""
 //_________________________________________SECTION#3: COUNTY FIPS & POLITICAL AFFILIATION MERGE _________________________________________________//
 
 *Adding FIPS identification based on zip
+	drop _merge
 	merge m:1 zip using ziptofips
 
 *Dropping empty merge & non-US observations
