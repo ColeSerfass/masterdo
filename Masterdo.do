@@ -66,6 +66,9 @@ import delimited "`root'NCCAP\Data\20210602\20210602Data.csv", clear
 drop if missing(security)
 drop if email==""
 
+*Manual fix for Grace Church loginid
+	 replace loginid=3771855275 if loginid==4667942694 & email=="khochstetler@woostergrace.org"
+
 *Merging the survey with dynamic (follow-up survey) data
 	merge m:1 loginid using dynamic_merge
 	sort _merge
