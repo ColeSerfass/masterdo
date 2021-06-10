@@ -139,6 +139,6 @@ foreach i in reportweekend {
 *Collapsing reported weekend info fpr identical churches
 collapse loginid numservicesapr* numservicesmay* numservicesjun* reportweekendapr* reportweekendmay* reportweekendjun* onlinetrackmethod onlineattendapr* onlineattendmay* onlineattendjun* numscreensapr* numscreensmay* numscreensjun* paidstaffmay* paidstaffapr* paidstaffjun*, by(emailupd churchname)
 
-
+save dynamic_merge.dta, replace
 
 
