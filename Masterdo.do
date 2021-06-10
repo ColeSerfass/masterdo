@@ -66,6 +66,10 @@ import delimited "`root'NCCAP\Data\20210602\20210602Data.csv", clear
 drop if missing(security)
 drop if email==""
 
+*Merging the survey with dynamic (follow-up survey) data
+	merge m:1 loginid using dynamic_merge
+	sort _merge
+	
 *Flagged IDs
 	gen flag="New Church" if loginid==1898682227
 	replace flag="Large Online to some In Person" if loginid==5381936596
