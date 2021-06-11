@@ -335,15 +335,14 @@ restore
 *Checking potential issues with # of services
 	tab numservices
 
-*ones to drop (based on ratio of attendance to numservices using eye test):
-	replace flag=flag+"suspicious numservices; " if numservices>26 & numservices!=.
-	replace flag=flag+"suspicious numservices; " if loginid==1063942572
-	replace flag=flag+"suspicious numservices; " if loginid==6068997846
-	replace flag=flag+"suspicious numservices; " if loginid==4783252749
-	replace flag=flag+"suspicious numservices; " if loginid==9146673329
-	*replace flag=flag+"suspicious numservices; " if loginid==6925724888 (dropped later)
-	replace flag=flag+"suspicious numservices; " if loginid==4794961958
-	replace flag=flag+"suspicious numservices; " if loginid==1498894439
+*ones to drop based on ratio of attendance to numservices using eye test:
+	drop if numservices>26 & numservices!=.
+	drop if loginid==1063942572
+	drop if loginid==6068997846
+	drop if loginid==4783252749
+	drop if loginid==9146673329
+	drop if loginid==4794961958
+	drop if loginid==1498894439
 *For the following church I checked their website, they have 2 services not 20, it must have been a typo
 	replace numservices=2 if loginid==4387233961
 
