@@ -417,9 +417,46 @@ keep if givingpercentchange>=-10
 export delimited churchesthatdidwell, replace
 restore
 
-//_________________________________________SECTION#:6 _________________________________________________//
 
-*CHARTS AND GRAPHS
+//_________________________________________SECTION#:6 UPDATING MOST RECENT ATTENDANCE _________________________________________________//	
+	
+gen numservicesmostrecent=.
+order numservicesmostrecent inpersonmostrecent onlinemostrecent screensmostrecent viewersmostrecent, before(flag)
+
+*Updating most recent attendance according to merged dynamic data 
+foreach i in inpersonmostrecent {
+		replace inpersonmostrecent=reportweekendapr18 if recordeddate<td(18apr2021) & reportweekendapr18!=. 
+		replace inpersonmostrecent=reportweekendapr25 if recordeddate<td(25apr2021) & reportweekendapr25!=. 
+		replace inpersonmostrecent=reportweekendmay9 if recordeddate<td(09may2021) & reportweekendmay9!=. 
+		replace inpersonmostrecent=reportweekendmay2 if recordeddate<td(02may2021) & reportweekendmay2!=.
+		replace inpersonmostrecent=reportweekendmay16 if recordeddate<td(16may2021) & reportweekendmay16!=.
+		replace inpersonmostrecent=reportweekendmay23 if recordeddate<td(23may2021) & reportweekendmay23!=.
+		replace inpersonmostrecent=reportweekendmay30 if recordeddate<td(30may2021) & reportweekendmay30!=.
+		replace inpersonmostrecent=reportweekendjun6 if recordeddate<td(06jun2021) & reportweekendjun6!=.
+		replace inpersonmostrecent=reportweekendjun13 if recordeddate<td(13jun2021) & reportweekendjun13!=.
+		replace inpersonmostrecent=reportweekendjun20 if recordeddate<td(20jun2021) & reportweekendjun20!=.
+		replace inpersonmostrecent=reportweekendjun27 if recordeddate<td(27jun2021) & reportweekendjun27!=.
+}
+
+
+*Updating most recent online attendance according to merged dynamic data 
+foreach i in onlinemostrecent {
+		replace onlinemostrecent=onlineattendapr18 if recordeddate<td(18apr2021) & onlineattendapr18!=. 
+		replace onlinemostrecent=onlineattendapr25 if recordeddate<td(25apr2021) & onlineattendapr25!=. 
+		replace onlinemostrecent=onlineattendmay9 if recordeddate<td(09may2021) & onlineattendmay9!=. 
+		replace onlinemostrecent=onlineattendmay2 if recordeddate<td(02may2021) & onlineattendmay2!=.
+		replace onlinemostrecent=onlineattendmay16 if recordeddate<td(16may2021) & onlineattendmay16!=.
+		replace onlinemostrecent=onlineattendmay23 if recordeddate<td(23may2021) & onlineattendmay23!=.
+		replace onlinemostrecent=onlineattendmay30 if recordeddate<td(30may2021) & onlineattendmay30!=.
+		replace onlinemostrecent=onlineattendjun6 if recordeddate<td(06jun2021) & onlineattendjun6!=.
+		replace onlinemostrecent=onlineattendjun13 if recordeddate<td(13jun2021) & onlineattendjun13!=.
+		replace onlinemostrecent=onlineattendjun20 if recordeddate<td(20jun2021) & onlineattendjun20!=.
+		replace onlinemostrecent=onlineattendjun27 if recordeddate<td(27jun2021) & onlineattendjun27!=.
+}
+
+
+//_________________________________________SECTION#:7 CHARTS & GRAPHS _________________________________________________//
+
 *Scatterplot Charts
 preserve
 keep inpersonjan2020 inpersonjan2021 inpersonmostrecent
