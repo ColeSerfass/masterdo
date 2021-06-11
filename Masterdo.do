@@ -668,3 +668,53 @@ collapse (sum) paidstaffcurrent paidstaffjan2020 up down equal (count) loginid, 
 gen staffratio=paidstaffcurrent/paidstaffjan2020 
 export delimited "staff20210503", replace
 restore
+
+*Racial majority within churches in our data
+preserve
+
+replace raceasian=-99 if raceasian==.
+replace raceblack=-99 if raceblack==.
+replace racenhpi=-99 if racenhpi==.
+replace racelatino=-99 if racelatino==.
+replace raceother=-99 if raceother==.
+replace racewhite=-99 if racewhite==.
+replace raceaian=-99 if raceaian==.
+
+* "." stands for Unknown
+gen mainrace=-1
+
+foreach x in denomination {
+	* Asian=1
+	replace mainrace=1 if raceasian>raceblack & raceasian>racelatino & raceasian>racenhpi & raceasian>racewhite & raceasian>raceother & raceasian>raceaian
+	* White=2
+	replace mainrace=2 if racewhite>raceblack & racewhite>racelatino & racewhite>racenhpi & racewhite>raceasian & racewhite>raceother & racewhite>raceaian
+	* Black=3
+	replace mainrace=3 if raceblack>racewhite & raceblack>racelatino & raceblack>racenhpi & raceblack>raceasian & raceblack>raceother & raceblack>raceaian
+	* NHPI=4
+	replace mainrace=4 if racenhpi>racewhite & racenhpi>racelatino & racenhpi>raceblack & racenhpi>raceasian & racenhpi>raceother & racenhpi>raceaian
+	* Latino=5
+	replace mainrace=5 if racelatino>racewhite & racelatino>raceblack & racelatino>racenhpi & racelatino>raceasian & racelatino>raceother & racelatino>raceaian
+	* AIAN=6
+	replace mainrace=6 if raceaian>racewhite & raceaian>raceblack & raceaian>racenhpi & raceaian>raceasian & raceaian>racelatino & raceaian>raceother 
+	* Other=7
+	replace mainrace=7 if raceother>racewhite & raceother>raceblack & raceother>racenhpi & raceother>raceasian & raceother>racelatino & raceother>raceaian
+	* Mixed=8
+	replace mainrace=8 if [mainrace==-1 & (raceasian!=-99 & raceblack!=-99 & racelatino!=-99 & racenhpi!=-99 & racewhite!=-99 & raceother!=-99 & raceaian!=-99)]
+}
+
+label define mainrace1 1 "Asian" 2 "White" 3 "Black" 4 "NHPI" 5 "Latino" 6 "AIAN" 7 "Other" 8 "Mixed" -1 "No Response" 
+label values mainrace mainrace1
+
+*Collapse number of churches by the main racial composition
+*collapse (count) loginid, by(mainrace)
+*export delimited "race", replace
+
+replace denomination=. if denomination==-99
+
+gen freq = 1
+collapse (count) freq, by(denomination mainrace)
+fillin denomination mainrace
+replace freq=0 if freq==.
+export delimited "racedenom202105", replace
+
+restore
