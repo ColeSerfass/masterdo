@@ -60,6 +60,9 @@ import delimited "`root'NCCAP\Data\20210602\20210602Data.csv", clear
 *Fixing variable name typos
 	rename contryother countryother
 
+*Fixing codename for ageretirement
+	replace ageretirement=5 if ageretirement==6
+
 
 //_________________________________________SECTION#2: CLEANING AND FLAGGING DATA _________________________________________________//
 
