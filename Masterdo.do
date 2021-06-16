@@ -42,7 +42,7 @@ import delimited "`root'NCCAP\Data\20210602\20210602Data.csv", clear
 	label values responder responder1
 	
 *Variable "denomination" numerical identification
-	label define denomination1 611 "Adventist" 608 "Anglican" 601 "Baptist" 600 "Catholic" 610 "Congregational Church" 609 "Holiness" 605 "Lutheran" 603 "Methodist/Wesleyan" 602 "Nondenominational" 604 "Pentecostal" 606 "Presbyterian/Reformed" 607 "Restorationist" 612 "Other"
+	label define denomination1 611 "Adventist" 608 "Anglican" 601 "Baptist" 600 "Catholic" 610 "Congregational Church" 609 "Holiness" 605 "Lutheran" 603 "Methodist/Wesleyan" 602 "Nondenominational" 604 "Pentecostal" 606 "Presbyterian/Reformed" 607 "Restorationist" 612 "Other" 613 "Christian and Missionary Alliance"
 	label values denomination denomination1
 
 *Variable "onlineservices" numerical identification
