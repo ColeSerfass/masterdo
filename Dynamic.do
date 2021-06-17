@@ -1,7 +1,19 @@
-  
-cd "C:\Users\nicho\Box\NCCAP\Data\MasterDo"
-import delimited "C:\Users\nicho\Box\NCCAP\Data\20210602\Church+Attendance+Initiative+(Dynamic)_June+2,+2021_08.28.csv", clear
+ local root="C:\Users\nicho\Box\"
+*local root="C:\Users\Cole\Box\"
+*local root="C:\Users\ryan\Box\"
+*local root="C:\Users\enochhill\Box\"
 
+cd "`root'NCCAP\Data\MasterDo"
+import delimited "`root'NCCAP\Data\20210617\20210617Dynamic.csv", clear
+
+*Converting onlineattendanceupd to numerc values
+	replace onlineattendanceupd="" if v36==8380676738
+		*^ An "unk" text entry
+	destring onlineattendanceupd, generate(onlineattendanceupd1)
+	rename onlineattendanceupd onlineattendanceupd2
+	drop onlineattendanceupd2
+	rename onlineattendanceupd1 onlineattendanceupd
+	
 *Drop observations with no attendance data
 drop if (inpersonupd==. & onlineattendanceupd==.)
 
