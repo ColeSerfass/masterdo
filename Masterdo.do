@@ -73,7 +73,7 @@ drop if email==""
 	 replace loginid=3771855275 if loginid==4667942694 & email=="khochstetler@woostergrace.org"
 
 *Merging the survey with dynamic (follow-up survey) data
-	merge m:1 loginid using dynamic_merge
+	merge m:m loginid using dynamic_merge
 	sort _merge
 	
 *Flagged IDs
