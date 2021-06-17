@@ -4,7 +4,7 @@ local root="C:\Users\nicho\Box\"
 *local root="C:\Users\enochhill\Box\"
 
 cd "`root'NCCAP\Data\MasterDo"
-import delimited "`root'NCCAP\Data\20210602\20210602Data.csv", clear
+import delimited "`root'NCCAP\Data\20210617\20210617Data.csv", clear
 
 
 //_________________________________________SECTION#1: VARIABLE & LABEL FORMATTING _________________________________________________//
