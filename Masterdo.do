@@ -4,7 +4,7 @@ local root="C:\Users\nicho\Box\"
 *local root="C:\Users\enochhill\Box\"
 
 cd "`root'NCCAP\Data\MasterDo"
-import delimited "`root'NCCAP\Data\20210617\20210617Data.csv", clear
+import delimited "`root'NCCAP\Data\20210701\20210701Data.csv", clear
 
 
 //_________________________________________SECTION#1: VARIABLE & LABEL FORMATTING _________________________________________________//
@@ -83,6 +83,7 @@ drop if email==""
 	replace flag="Jan2020 suspect" if loginid==5368830490
 	replace flag="Online only" if loginid==2030355526
 	replace flag="Almost all online, odd pattern" if loginid==2235356149
+	replace flag="paidstaff is reported in $, not # of people; " if loginid==6845489694
 
 *Error in attendance data?
 	drop if loginid==9275200923 
