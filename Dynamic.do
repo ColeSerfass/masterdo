@@ -4,7 +4,7 @@
 *local root="C:\Users\enochhill\Box\"
 
 cd "`root'NCCAP\Data\MasterDo"
-import delimited "`root'NCCAP\Data\20210617\20210617Dynamic.csv", clear
+import delimited "`root'NCCAP\Data\20210701\20210701Dynamic.csv", clear
 
 *Converting onlineattendanceupd to numerc values
 	replace onlineattendanceupd="" if v36==8380676738
